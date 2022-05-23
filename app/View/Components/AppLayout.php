@@ -19,6 +19,9 @@ class AppLayout extends Component
             'js' => 'https://cdn.jsdelivr.net/npm/sweetalert2@10',
             'js-attribute' => '',
         ],
+        'jquery' => [
+            'js' => 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
+        ]
         /* Add here for another libraries link
         'library-name' => [
             'css' => '',
