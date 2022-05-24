@@ -45,9 +45,13 @@
     @push('scripts')
         <script>
         function getData(url = null) {
+            let productRow = $('#table-data-product').find('tbody')
+
+            productRow.empty()
+            productRow.append('Loading')
+
             $.get(null === url ? "api/v1/products" : url)
                 .done(function(response) {
-                    let productRow = $('#table-data-product').find('tbody')
 
                     productRow.empty()
 
@@ -88,16 +92,17 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         url: 'api/v1/products/' + id,
-                        type: 'DELETE',
-                        success: function(result) {
-                            getData()
+                        type: 'DELETE'
+                    }).done(function(response) {
+                        getData()
 
-                            Swal.fire(
-                                'Deleted!',
-                                'Your file has been deleted.',
-                                'success'
-                            )
-                        }
+                        console.log(response)
+
+                        Swal.fire(
+                            'Deleted!',
+                            response.message,
+                            response.status
+                        )
                     })
                 }
             })
