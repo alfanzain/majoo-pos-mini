@@ -1,8 +1,9 @@
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+            <a href="/" class="text-decoration-none">
+                {{-- <x-application-logo class="w-20 h-20 fill-current text-gray-500" /> --}}
+                <h2>{{ config('app.name', 'Laravel') }}</h2>
             </a>
         </x-slot>
 
@@ -40,14 +41,14 @@
                 </label>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="flex items-center justify-end mt-2">
                 @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
+                    <a class="text-small" href="{{ route('password.request') }}">
                         {{ __('Forgot your password?') }}
                     </a>
                 @endif
 
-                <x-button class="ml-3">
+                <x-button>
                     {{ __('Log in') }}
                 </x-button>
             </div>
