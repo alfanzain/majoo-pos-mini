@@ -12,10 +12,13 @@
                     </div>
                     <div class="card-body">
 
+                        <button type="button" class="btn btn-primary">Add Product</button>
+
                         <div id="box-data-product" class="p-3 bg-white border-b border-gray-200">
-                            <table id="table-data-product" class="table">
+                            <table id="table-data-product" class="table table-striped">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th>ID</th>
                                         <th>Name</th>
                                         <th>Description</th>
@@ -48,15 +51,18 @@
 
                     productRow.empty()
 
-                    for (let product of response.data) {
-                        productRow.append(`<tr><td class="">${product.id}</td>
+                    for (let product of response.data.data) {
+                        productRow.append(`<tr>
+                            <td class="" style="width: 160px"><a href="#" class="btn btn-light">Edit</a> <a href="#" class="btn btn-danger" onclick="deleteData(${product.id})">Delete</a></td>
+                            <td class="">${product.id}</td>
                             <td class="">${product.name}</td>
                             <td class="">${product.description}</td>
-                            <td class="">${product.category_name}</td></tr>`)
+                            <td class="">${product.category_name}</td>
+                        </tr>`)
                     }
 
-                    prevUrl = response.prev_page_url
-                    nextUrl = response.next_page_url
+                    prevUrl = response.data.prev_page_url
+                    nextUrl = response.data.next_page_url
 
                     if (null === prevUrl)
                         $('#box-data-product #prev').hide()
@@ -69,10 +75,36 @@
                         $('#box-data-product #next').show()
                 })
         }
+
+        function deleteData(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'api/v1/products/' + id,
+                        type: 'DELETE',
+                        success: function(result) {
+                            getData()
+
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            )
+                        }
+                    })
+                }
+            })
+        }
         </script>
         <script>
         $(function() {
-
             var prevUrl = null, nextUrl = null;
 
             getData()

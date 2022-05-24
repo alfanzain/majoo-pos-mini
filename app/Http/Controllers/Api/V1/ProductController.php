@@ -17,14 +17,23 @@ class ProductController extends Controller
     public function get()
     {
         try {
-            $products = Product::simplePaginate(5);
+            $products = Product::query();
 
-            return $products;
+            $searchQuery = request()->query('q');
+
+            $products->when($searchQuery, function($query) use ($searchQuery) {
+                return $query->where("name", "LIKE", "%" . strtolower($searchQuery) . "%");
+            });
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $products->paginate(10),
+            ]);
         } catch (\Exception $e) {
-            return [
+            return response()->json([
+                'status' => 'error',
                 'message' => $e->getMessage(),
-                'status_code' => 400
-            ];
+            ], 400);
         }
     }
 
@@ -57,25 +66,25 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        if ($id === null || $id === 0) {
-            return [
-                'status_code' => 400
-            ];
+        if (!$id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found'
+            ], 404);
         }
 
         try {
             $product = Product::where('id', $id)->get();
 
-            return [
-                'count' => $product->count(),
-                'data' => $product,
-                'status_code' => 200
-            ];
+            return response()->json([
+                'status' => 'success',
+                'data' => $product
+            ]);
         } catch (\Exception $e) {
-            return [
+            return response()->json([
+                'status' => 'error',
                 'message' => $e->getMessage(),
-                'status_code' => 400
-            ];
+            ], 400);
         }
     }
 
@@ -110,6 +119,20 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found'
+            ], 404);
+        }
+
+        $product->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product deleted'
+        ]);
     }
 }
