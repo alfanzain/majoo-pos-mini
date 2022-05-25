@@ -135,69 +135,103 @@
 
     @push('scripts')
         <script>
-        function populate(frm, data) {
-            $.each(data, function(key, value) {
-                var ctrl = $('[name='+key+']', frm);
-                switch(ctrl.prop("type")) {
-                    case "radio": case "checkbox":
-                        ctrl.each(function() {
-                            if($(this).attr('value') == value) $(this).attr("checked",value);
-                        });
-                        break;
-                    default:
-                        ctrl.val(value);
-                }
-            });
-        }
-
-        function getData(url = null) {
-            let productRow = $('#table-data-product').find('tbody')
-
-            productRow.empty()
-            productRow.append('Loading')
-
-            $.get(null === url ? "api/v1/products" : url)
-                .done(function(response) {
-                    productRow.empty()
-
-                    productDataStore = response.data.data
-
-                    for (let product of productDataStore) {
-                        productRow.append(`<tr>
-                            <td class="" style="width: 160px">
-                                <a href="#" class="btn btn-light" onclick="editData(${product.id})">Edit</a> <a href="#" class="btn btn-danger" onclick="deleteData(${product.id})">Delete</a>
-                            </td>
-                            <td class="">${product.id}</td>
-                            <td class="">${product.name}</td>
-                            <td class="">Rp ${product.price_text}</td>
-                            <td class="">${product.description}</td>
-                            <td class="">${product.category_name}</td>
-                        </tr>`)
+            function populate(frm, data) {
+                $.each(data, function(key, value) {
+                    var ctrl = $('[name='+key+']', frm);
+                    switch(ctrl.prop("type")) {
+                        case "radio": case "checkbox":
+                            ctrl.each(function() {
+                                if($(this).attr('value') == value) $(this).attr("checked",value);
+                            });
+                            break;
+                        default:
+                            ctrl.val(value);
                     }
+                });
+            }
 
-                    prevUrl = response.data.prev_page_url
-                    nextUrl = response.data.next_page_url
+            function getData(url = null) {
+                let productRow = $('#table-data-product').find('tbody')
 
-                    if (null === prevUrl)
-                        $('#box-data-product #prev').hide()
-                    else
-                        $('#box-data-product #prev').show()
+                productRow.empty()
+                productRow.append('Loading')
 
-                    if (null === nextUrl)
-                        $('#box-data-product #next').hide()
-                    else
-                        $('#box-data-product #next').show()
-                })
-        }
+                $.get(null === url ? "{{ url('api/v1/products') }}" : url)
+                    .done(function(response) {
+                        productRow.empty()
 
-        function postData() {
-            $.post("api/v1/products", $("#form-add-product").serialize())
-                .done(function(response) {
+                        productDataStore = response.data.data
+
+                        for (let product of productDataStore) {
+                            productRow.append(`<tr>
+                                <td class="" style="width: 160px">
+                                    <a href="#" class="btn btn-light" onclick="editData(${product.id})">Edit</a> <a href="#" class="btn btn-danger" onclick="deleteData(${product.id})">Delete</a>
+                                </td>
+                                <td class="">${product.id}</td>
+                                <td class="">${product.name}</td>
+                                <td class="">Rp ${product.price_text}</td>
+                                <td class="">${product.description}</td>
+                                <td class="">${product.category_name}</td>
+                            </tr>`)
+                        }
+
+                        prevUrl = response.data.prev_page_url
+                        nextUrl = response.data.next_page_url
+
+                        if (null === prevUrl)
+                            $('#box-data-product #prev').hide()
+                        else
+                            $('#box-data-product #prev').show()
+
+                        if (null === nextUrl)
+                            $('#box-data-product #next').hide()
+                        else
+                            $('#box-data-product #next').show()
+                    })
+            }
+
+            function postData() {
+                $.post("{{ url('api/v1/products') }}", $("#form-add-product").serialize())
+                    .done(function(response) {
+                        if (response.status == 'success') {
+                            getData()
+
+                            Swal.fire(
+                                'Created!',
+                                response.message,
+                                response.status
+                            )
+                        }
+
+                        if (response.status == 'error') {
+                            Swal.fire(
+                                'Oops!',
+                                response.message,
+                                response.status
+                            )
+
+                            return false
+                        }
+
+                        var modalEl = document.querySelector('#formAddModal')
+                        var modal = bootstrap.Modal.getInstance(modalEl)
+                        modal.hide()
+
+                        $("#form-add-product").trigger('reset')
+                    })
+            }
+
+            function putData() {
+                $.ajax({
+                    url: '{{ url('api/v1/products') }}/' + $("#form-edit-product").data("product_id"),
+                    data:  $("#form-edit-product").serialize(),
+                    type: 'PUT'
+                }).done(function(response) {
                     if (response.status == 'success') {
                         getData()
 
                         Swal.fire(
-                            'Created!',
+                            'Updated!',
                             response.message,
                             response.status
                         )
@@ -213,103 +247,69 @@
                         return false
                     }
 
-                    var modalEl = document.querySelector('#formAddModal')
+                    var modalEl = document.querySelector('#formEditModal')
                     var modal = bootstrap.Modal.getInstance(modalEl)
                     modal.hide()
 
-                    $("#form-add-product").trigger('reset')
+                    $("#form-edit-product").trigger('reset')
                 })
-        }
+            }
 
-        function putData() {
-            $.ajax({
-                url: 'api/v1/products/' + $("#form-edit-product").data("product_id"),
-                data:  $("#form-edit-product").serialize(),
-                type: 'PUT'
-            }).done(function(response) {
-                if (response.status == 'success') {
-                    getData()
-
-                    Swal.fire(
-                        'Updated!',
-                        response.message,
-                        response.status
-                    )
-                }
-
-                if (response.status == 'error') {
-                    Swal.fire(
-                        'Oops!',
-                        response.message,
-                        response.status
-                    )
-
-                    return false
-                }
-
+            function editData(id) {
                 var modalEl = document.querySelector('#formEditModal')
-                var modal = bootstrap.Modal.getInstance(modalEl)
-                modal.hide()
+                var modal = bootstrap.Modal.getOrCreateInstance(modalEl)
+                modal.show()
 
-                $("#form-edit-product").trigger('reset')
-            })
-        }
+                populate("#form-edit-product", productDataStore.filter((product) => product.id === id)[0])
 
-        function editData(id) {
-            var modalEl = document.querySelector('#formEditModal')
-            var modal = bootstrap.Modal.getOrCreateInstance(modalEl)
-            modal.show()
+                $("#form-edit-product").data("product_id", id)
+            }
 
-            populate("#form-edit-product", productDataStore.filter((product) => product.id === id)[0])
+            function deleteData(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '{{ url('api/v1/products') }}/' + id,
+                            type: 'DELETE'
+                        }).done(function(response) {
+                            if (response.status == 'success') {
+                                getData()
 
-            $("#form-edit-product").data("product_id", id)
-        }
+                                Swal.fire(
+                                    'Deleted!',
+                                    response.message,
+                                    response.status
+                                )
+                            }
 
-        function deleteData(id) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: 'api/v1/products/' + id,
-                        type: 'DELETE'
-                    }).done(function(response) {
-                        if (response.status == 'success') {
-                            getData()
+                            if (response.status == 'error') {
+                                Swal.fire(
+                                    'Oops!',
+                                    response.message,
+                                    response.status
+                                )
 
-                            Swal.fire(
-                                'Deleted!',
-                                response.message,
-                                response.status
-                            )
-                        }
-
-                        if (response.status == 'error') {
-                            Swal.fire(
-                                'Oops!',
-                                response.message,
-                                response.status
-                            )
-
-                            return false
-                        }
-                    })
-                }
-            })
-        }
+                                return false
+                            }
+                        })
+                    }
+                })
+            }
         </script>
         <script>
-        $(function() {
-            var productDataStore = null
-            var prevUrl = null, nextUrl = null
+            $(function() {
+                var productDataStore = null
+                var prevUrl = null, nextUrl = null
 
-            getData()
-        })
+                getData()
+            })
         </script>
     @endpush
 

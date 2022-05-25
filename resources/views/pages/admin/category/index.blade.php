@@ -115,7 +115,7 @@
             categoryRow.empty()
             categoryRow.append('Loading')
 
-            $.get(null === url ? "api/v1/categories" : url)
+            $.get(null === url ? "{{ url('api/v1/categories') }}" : url)
                 .done(function(response) {
                     categoryRow.empty()
 
@@ -147,7 +147,7 @@
         }
 
         function postData() {
-            $.post("api/v1/categories", $("#form-add-category").serialize())
+            $.post("{{ url('api/v1/categories') }}", $("#form-add-category").serialize())
                 .done(function(response) {
                     if (response.status == 'success') {
                         getData()
@@ -179,7 +179,7 @@
 
         function putData() {
             $.ajax({
-                url: 'api/v1/categories/' + $("#form-edit-category").data("category_id"),
+                url: '{{ url('api/v1/categories') }}/' + $("#form-edit-category").data("category_id"),
                 data:  $("#form-edit-category").serialize(),
                 type: 'PUT'
             }).done(function(response) {
@@ -232,7 +232,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: 'api/v1/categories/' + id,
+                        url: '{{ url('api/v1/categories') }}/' + id,
                         type: 'DELETE'
                     }).done(function(response) {
                         if (response.status == 'success') {

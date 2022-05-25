@@ -2,14 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
+
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CategoryController;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+Route::get('/', [HomeController::class, 'index']);
 
 Route::middleware(['auth'])->prefix('admin')->group(function (): void {
     Route::get('/', function () {
@@ -32,5 +31,3 @@ Route::middleware(['auth'])->prefix('admin')->group(function (): void {
 require __DIR__.'/auth.php';
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
