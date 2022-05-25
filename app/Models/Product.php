@@ -22,12 +22,21 @@ class Product extends Model
     ];
 
     protected $appends = [
-        'category_name'
+        'category_name',
+        'price_text'
     ];
 
     protected $with = [
         'category'
     ];
+
+    protected function getPriceTextAttribute()
+    {
+        if (null !== $this->price)
+            return number_format($this->price , 0 , '.' , ',' );
+        else
+            return '-';
+    }
 
     protected function getCategoryNameAttribute()
     {

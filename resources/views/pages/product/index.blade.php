@@ -4,7 +4,7 @@
     </x-slot>
 
     <x-slot name="content">
-        <!-- Form -->
+        {{-- Form --}}
         <div class="modal fade" id="formAddModal" tabindex="-1" aria-labelledby="formAddModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -49,7 +49,7 @@
             </div>
         </div>
 
-                <div class="modal fade" id="formEditModal" tabindex="-1" aria-labelledby="formEditModalLabel" aria-hidden="true">
+        <div class="modal fade" id="formEditModal" tabindex="-1" aria-labelledby="formEditModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -93,7 +93,7 @@
             </div>
         </div>
 
-
+        {{-- List --}}
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
@@ -111,6 +111,7 @@
                                         <th></th>
                                         <th>ID</th>
                                         <th>Name</th>
+                                        <th>Price</th>
                                         <th>Description</th>
                                         <th>Category</th>
                                     </tr>
@@ -168,6 +169,7 @@
                             </td>
                             <td class="">${product.id}</td>
                             <td class="">${product.name}</td>
+                            <td class="">Rp ${product.price_text}</td>
                             <td class="">${product.description}</td>
                             <td class="">${product.category_name}</td>
                         </tr>`)
