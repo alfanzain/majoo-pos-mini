@@ -35,7 +35,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 400);
+            ]);
         }
     }
 
@@ -61,8 +61,9 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => $validator->errors()
-            ], 400);
+                // 'message' => $validator->errors()
+                'message' => 'Product could not be created. Please try again'
+            ]);
         }
 
         $product = Product::create($data);
@@ -86,7 +87,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Product not found'
-            ], 404);
+            ]);
         }
 
         try {
@@ -100,7 +101,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 400);
+            ]);
         }
     }
 
@@ -130,7 +131,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Product not found'
-            ], 404);
+            ]);
         }
 
         $product->delete();

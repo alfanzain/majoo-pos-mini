@@ -139,6 +139,18 @@
                         )
                     }
 
+                    if (response.status == 'error') {
+                        getData()
+
+                        Swal.fire(
+                            'Oops!',
+                            response.message,
+                            response.status
+                        )
+
+                        return false
+                    }
+
                     var modalEl = document.querySelector('#formModal');
                     var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                     modal.hide();
