@@ -50,7 +50,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form id="form-product">
                             <div class="row g-3 align-items-center">
                                 <div>
                                     <label class="form-label">Name</label>
@@ -71,9 +71,8 @@
                                     <label class="form-label">Category</label>
                                     <select class="form-select" name="category_id">
                                         <option selected>Select category</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                        <option value="1">Standard</option>
+                                        <option value="2">Enterprise</option>
                                     </select>
                                 </div>
                             </div>
@@ -81,7 +80,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary" onclick="postData()">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -127,20 +126,22 @@
                 })
         }
 
-        function storeData() {
-            $.post("api/v1/products")
+        function postData() {
+            $.post("api/v1/products", $("#form-product").serialize())
                 .done(function(response) {
                     if (response.status == 'success') {
                         getData()
 
-                        // console.log(response)
-
                         Swal.fire(
-                            'Saved!',
+                            'Created!',
                             response.message,
                             response.status
                         )
                     }
+
+                    var modalEl = document.querySelector('#formModal');
+                    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modal.hide();
                 })
         }
 
