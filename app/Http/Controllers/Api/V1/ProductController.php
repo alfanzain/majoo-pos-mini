@@ -61,8 +61,8 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                // 'message' => $validator->errors()
-                'message' => 'Product could not be created. Please try again'
+                'message' => $validator->errors()
+                // 'message' => 'Product could not be created. Please try again'
             ]);
         }
 
@@ -70,7 +70,7 @@ class ProductController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Product created successfully',
+            'message' => 'Product created',
             'data' => $product
         ]);
     }
@@ -114,7 +114,41 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = [
+            'name' => 'required|unique:products,name|string',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'category_id' => 'nullable|numeric',
+        ];
+
+        $data = $request->all();
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()
+            ], 400);
+        }
+
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found'
+            ], 404);
+        }
+
+        $product->fill($data);
+        $product->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product updated',
+            'data' => $product
+        ]);
     }
 
     /**

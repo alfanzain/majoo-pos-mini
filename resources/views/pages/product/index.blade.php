@@ -4,53 +4,16 @@
     </x-slot>
 
     <x-slot name="content">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <strong class="card-title">Product List</strong>
-                    </div>
-                    <div class="card-body">
-
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formModal">Add Product</button>
-
-                        <div id="box-data-product" class="p-3 bg-white border-b border-gray-200">
-                            <table id="table-data-product" class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Category</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-
-                            <div class="float-right flex mt-3">
-                                <a href="#" id="prev" class="block bg-[#38bdf8] rounded-md px-3 py-3 text-white" onclick="getData(prevUrl)">Prev</a>
-                                <a href="#" id="next" class="block bg-[#38bdf8] rounded-md px-3 py-3 ml-2 text-white" onclick="getData(nextUrl)">Next</a>
-                            </div>
-                            <div class="clear-both"></div>
-                        </div>
-                    </table>
-
-                </div>
-            </div>
-        </div>
-
         <!-- Form -->
-        <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+        <div class="modal fade" id="formAddModal" tabindex="-1" aria-labelledby="formAddModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="formModalLabel">Form Product</h5>
+                        <h5 class="modal-title" id="formAddModalLabel">Form Product</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="form-product">
+                        <form id="form-add-product">
                             <div class="row g-3 align-items-center">
                                 <div>
                                     <label class="form-label">Name</label>
@@ -80,8 +43,90 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="postData()">Save changes</button>
+                        <button type="button" id="submitPost" class="btn btn-primary" onclick="postData()">Save</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+                <div class="modal fade" id="formEditModal" tabindex="-1" aria-labelledby="formEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="formAddModalLabel">Form Product</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-edit-product">
+                            <div class="row g-3 align-items-center">
+                                <div>
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" name="name">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" name="description" id="" cols="30" rows="10"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Price</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="number" class="form-control" name="price">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" name="category_id">
+                                        <option selected>Select category</option>
+                                        <option value="1">Standard</option>
+                                        <option value="2">Enterprise</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" id="submitPost" class="btn btn-primary" onclick="putData()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong class="card-title">Product List</strong>
+                    </div>
+                    <div class="card-body">
+
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formAddModal">Add Product</button>
+
+                        <div id="box-data-product" class="p-3 bg-white border-b border-gray-200">
+                            <table id="table-data-product" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Category</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+                            <div class="float-right flex mt-3">
+                                <a href="#" id="prev" class="block bg-[#38bdf8] rounded-md px-3 py-3 text-white" onclick="getData(prevUrl)">Prev</a>
+                                <a href="#" id="next" class="block bg-[#38bdf8] rounded-md px-3 py-3 ml-2 text-white" onclick="getData(nextUrl)">Next</a>
+                            </div>
+                            <div class="clear-both"></div>
+                        </div>
+                    </table>
+
                 </div>
             </div>
         </div>
@@ -89,6 +134,21 @@
 
     @push('scripts')
         <script>
+        function populate(frm, data) {
+            $.each(data, function(key, value) {
+                var ctrl = $('[name='+key+']', frm);
+                switch(ctrl.prop("type")) {
+                    case "radio": case "checkbox":
+                        ctrl.each(function() {
+                            if($(this).attr('value') == value) $(this).attr("checked",value);
+                        });
+                        break;
+                    default:
+                        ctrl.val(value);
+                }
+            });
+        }
+
         function getData(url = null) {
             let productRow = $('#table-data-product').find('tbody')
 
@@ -99,10 +159,12 @@
                 .done(function(response) {
                     productRow.empty()
 
-                    for (let product of response.data.data) {
+                    productDataStore = response.data.data
+
+                    for (let product of productDataStore) {
                         productRow.append(`<tr>
                             <td class="" style="width: 160px">
-                                <a href="#" class="btn btn-light">Edit</a> <a href="#" class="btn btn-danger" onclick="deleteData(${product.id})">Delete</a>
+                                <a href="#" class="btn btn-light" onclick="editData(${product.id})">Edit</a> <a href="#" class="btn btn-danger" onclick="deleteData(${product.id})">Delete</a>
                             </td>
                             <td class="">${product.id}</td>
                             <td class="">${product.name}</td>
@@ -127,7 +189,7 @@
         }
 
         function postData() {
-            $.post("api/v1/products", $("#form-product").serialize())
+            $.post("api/v1/products", $("#form-add-product").serialize())
                 .done(function(response) {
                     if (response.status == 'success') {
                         getData()
@@ -151,10 +213,58 @@
                         return false
                     }
 
-                    var modalEl = document.querySelector('#formModal');
-                    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                    modal.hide();
+                    var modalEl = document.querySelector('#formAddModal')
+                    var modal = bootstrap.Modal.getInstance(modalEl)
+                    modal.hide()
+
+                    $("#form-add-product").trigger('reset')
                 })
+        }
+
+        function putData() {
+            $.ajax({
+                url: 'api/v1/products/' + $("#form-edit-product").data("product_id"),
+                data:  $("#form-edit-product").serialize(),
+                type: 'PUT'
+            }).done(function(response) {
+                if (response.status == 'success') {
+                    getData()
+
+                    Swal.fire(
+                        'Updated!',
+                        response.message,
+                        response.status
+                    )
+                }
+
+                if (response.status == 'error') {
+                    getData()
+
+                    Swal.fire(
+                        'Oops!',
+                        response.message,
+                        response.status
+                    )
+
+                    return false
+                }
+
+                var modalEl = document.querySelector('#formEditModal')
+                var modal = bootstrap.Modal.getInstance(modalEl)
+                modal.hide()
+
+                $("#form-edit-product").trigger('reset')
+            })
+        }
+
+        function editData(id) {
+            var modalEl = document.querySelector('#formEditModal')
+            var modal = bootstrap.Modal.getOrCreateInstance(modalEl)
+            modal.show()
+
+            populate("#form-edit-product", productDataStore.filter((product) => product.id === id)[0])
+
+            $("#form-edit-product").data("product_id", id)
         }
 
         function deleteData(id) {
@@ -187,7 +297,8 @@
         </script>
         <script>
         $(function() {
-            var prevUrl = null, nextUrl = null;
+            var productDataStore = null
+            var prevUrl = null, nextUrl = null
 
             getData()
         })
