@@ -204,8 +204,6 @@
                     }
 
                     if (response.status == 'error') {
-                        getData()
-
                         Swal.fire(
                             'Oops!',
                             response.message,
@@ -240,8 +238,6 @@
                 }
 
                 if (response.status == 'error') {
-                    getData()
-
                     Swal.fire(
                         'Oops!',
                         response.message,
@@ -283,15 +279,25 @@
                         url: 'api/v1/products/' + id,
                         type: 'DELETE'
                     }).done(function(response) {
-                        getData()
+                        if (response.status == 'success') {
+                            getData()
 
-                        // console.log(response)
+                            Swal.fire(
+                                'Deleted!',
+                                response.message,
+                                response.status
+                            )
+                        }
 
-                        Swal.fire(
-                            'Deleted!',
-                            response.message,
-                            response.status
-                        )
+                        if (response.status == 'error') {
+                            Swal.fire(
+                                'Oops!',
+                                response.message,
+                                response.status
+                            )
+
+                            return false
+                        }
                     })
                 }
             })

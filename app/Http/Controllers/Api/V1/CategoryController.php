@@ -162,6 +162,13 @@ class CategoryController extends Controller
             ]);
         }
 
+        if ($category->products()->count() > 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'This category has used on one or more products'
+            ]);
+        }
+
         $category->delete();
 
         return response()->json([
