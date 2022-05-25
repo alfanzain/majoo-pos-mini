@@ -14,6 +14,16 @@ Majoo POS Mini is a simple point-of-sale to display products. This project is bu
 8. Access http://127.0.0.1:8000/login to login into admin page.
 9. Access http://127.0.0.1:8000/ to see the homepage.
 
+
+## Technology
+
+- Laravel v9.11
+- MySQL
+- Bootstrap v5
+- jQuery
+- A bit of Tailwind CSS
+
+
 ## Entity Relationship Diagram
 
 ![image](https://user-images.githubusercontent.com/4216529/170176608-5dbf26db-f813-44c9-94ec-a09bb16f1f67.png)
