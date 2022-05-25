@@ -1,7 +1,18 @@
 ## Majoo POS Mini
 
-Majoo POS Mini is a simple point-of-sale to display products.
+Majoo POS Mini is a simple point-of-sale to display products. This project is built for Majoo appliance test.
 
+## Installation
+
+1. `git clone https://github.com/alfanzain/majoo-pos-mini majoo-pos-mini-test`
+2. `composer install`
+3. Copy .env.example then rename to .env
+4. Change database credentials and create the database
+5. `php artisan migrate --seed`
+6. `php artisan key:generate`
+7. `php artisan serve`
+8. Access http://127.0.0.1:8000/login to login into admin page.
+9. Access http://127.0.0.1:8000/ to see the homepage.
 
 ## Entity Relationship Diagram
 
