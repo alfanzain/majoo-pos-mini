@@ -14,9 +14,9 @@
                     {{ Auth::user()->name }}
                 </a>
 
-                <ul class="user-menu dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#"><i class="fa fa-power-off" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"></i> {{ __('Logout') }}</a></li>
-                </ul>
+                <div class="user-menu dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> {{ __('Logout') }}</a>
+                </div>
 
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf

@@ -17,6 +17,6 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
-        return view('pages.category.index', $categories);
+        return view('pages.admin.category.index', $categories);
     }
 }

@@ -10,11 +10,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
-Route::middleware(['auth'])->group(function (): void {
+Route::middleware(['auth'])->prefix('admin')->group(function (): void {
+    Route::get('/', function () {
+        return view('pages.admin.dashboard');
+    });
+
+    Route::get('/dashboard', function () {
+        return view('pages.admin.dashboard');
+    })->name('dashboard');
+
     Route::prefix('products')->controller(ProductController::class)->name('product')->group(function (): void {
         Route::get('/', 'index');
     });
