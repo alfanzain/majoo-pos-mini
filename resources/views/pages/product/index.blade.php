@@ -12,7 +12,7 @@
                     </div>
                     <div class="card-body">
 
-                        <button type="button" class="btn btn-primary">Add Product</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formModal">Add Product</button>
 
                         <div id="box-data-product" class="p-3 bg-white border-b border-gray-200">
                             <table id="table-data-product" class="table table-striped">
@@ -40,6 +40,52 @@
                 </div>
             </div>
         </div>
+
+        <!-- Form -->
+        <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="formModalLabel">Form Product</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="row g-3 align-items-center">
+                                <div>
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" name="name">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" name="description" id="" cols="30" rows="10"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Price</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="number" class="form-control" name="price">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" name="category_id">
+                                        <option selected>Select category</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </x-slot>
 
     @push('scripts')
@@ -52,12 +98,13 @@
 
             $.get(null === url ? "api/v1/products" : url)
                 .done(function(response) {
-
                     productRow.empty()
 
                     for (let product of response.data.data) {
                         productRow.append(`<tr>
-                            <td class="" style="width: 160px"><a href="#" class="btn btn-light">Edit</a> <a href="#" class="btn btn-danger" onclick="deleteData(${product.id})">Delete</a></td>
+                            <td class="" style="width: 160px">
+                                <a href="#" class="btn btn-light">Edit</a> <a href="#" class="btn btn-danger" onclick="deleteData(${product.id})">Delete</a>
+                            </td>
                             <td class="">${product.id}</td>
                             <td class="">${product.name}</td>
                             <td class="">${product.description}</td>
@@ -80,6 +127,23 @@
                 })
         }
 
+        function storeData() {
+            $.post("api/v1/products")
+                .done(function(response) {
+                    if (response.status == 'success') {
+                        getData()
+
+                        // console.log(response)
+
+                        Swal.fire(
+                            'Saved!',
+                            response.message,
+                            response.status
+                        )
+                    }
+                })
+        }
+
         function deleteData(id) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -96,7 +160,7 @@
                     }).done(function(response) {
                         getData()
 
-                        console.log(response)
+                        // console.log(response)
 
                         Swal.fire(
                             'Deleted!',

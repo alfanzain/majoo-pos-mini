@@ -15,6 +15,7 @@ Route::group(['prefix' => 'v1'], function (): void {
     Route::prefix('products')->controller(ProductController::class)->name('product')->group(function (): void {
         Route::get('/', 'get');
         Route::get('/{id}', 'show');
+        Route::post('/', 'store');
         Route::delete('/{id}', 'destroy');
     });
 });

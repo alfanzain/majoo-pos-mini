@@ -400,9 +400,9 @@ button:focus {
 
 img {
   max-width: 100%; }
-
+/*
 .modal-header {
-  display: block; }
+  display: block; } */
 
 .mb-0 {
   margin-bottom: 0; }

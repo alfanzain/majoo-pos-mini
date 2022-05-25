@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 150)->default('Default Product Name');
             $table->text('description')->nullable();
+            $table->integer('price')->unsigned()->default('0');
             $table->integer('category_id')->unsigned()->default('0');
             $table->timestamps();
         });
