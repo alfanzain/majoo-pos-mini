@@ -27,15 +27,9 @@ class ProductController extends Controller
                 return $query->where("name", "LIKE", "%" . strtolower($searchQuery) . "%");
             });
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $products->paginate(10),
-            ]);
+            return $this->responseSuccess('', $products->paginate(10));
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ]);
+            return $this->responseError($e->getMessage());
         }
     }
 
@@ -59,20 +53,12 @@ class ProductController extends Controller
         $validator = Validator::make($data, $rules);
 
         if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                // 'message' => $validator->errors()
-                'message' => 'Product could not be created. Please try again'
-            ]);
+            return $this->responseError('Product could not be created. Please try again');
         }
 
         $product = Product::create($data);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Product created',
-            'data' => $product
-        ]);
+        return $this->responseSuccess('Product created');
     }
 
     /**
@@ -84,24 +70,16 @@ class ProductController extends Controller
     public function show($id)
     {
         if (!$id) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Product not found'
-            ]);
+            return $this->responseError('Product not found');
+
         }
 
         try {
             $product = Product::where('id', $id)->get();
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $product
-            ]);
+            return $this->responseSuccess('', $product);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ]);
+            return $this->responseError($e->getMessage());
         }
     }
 
@@ -126,29 +104,19 @@ class ProductController extends Controller
         $validator = Validator::make($data, $rules);
 
         if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $validator->errors()
-            ], 400);
+            return $this->responseError('Product could not be updated. Please try again');
         }
 
         $product = Product::find($id);
 
         if (!$product) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Product not found'
-            ], 404);
+            return $this->responseError('Product not found');
         }
 
         $product->fill($data);
         $product->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Product updated',
-            'data' => $product
-        ]);
+        return $this->responseSuccess('Product updated', $product);
     }
 
     /**
@@ -162,17 +130,11 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         if (!$product) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Product not found'
-            ]);
+            return $this->responseError('Product not found');
         }
 
         $product->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Product deleted'
-        ]);
+        return $this->responseSuccess('Product deleted');
     }
 }

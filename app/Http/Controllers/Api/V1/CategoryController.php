@@ -27,15 +27,9 @@ class CategoryController extends Controller
                 return $query->where("name", "LIKE", "%" . strtolower($searchQuery) . "%");
             });
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $categories->paginate(10),
-            ]);
+            return $this->responseSuccess('', $categories->paginate(10));
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ]);
+            return $this->responseError($e->getMessage());
         }
     }
 
@@ -56,20 +50,12 @@ class CategoryController extends Controller
         $validator = Validator::make($data, $rules);
 
         if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                // 'message' => $validator->errors()
-                'message' => 'Category could not be created. Please try again'
-            ]);
+            return $this->responseError('Category could not be created. Please try again');
         }
 
         $category = Category::create($data);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Category created',
-            'data' => $category
-        ]);
+        return $this->responseSuccess('Category created');
     }
 
     /**
@@ -81,24 +67,15 @@ class CategoryController extends Controller
     public function show($id)
     {
         if (!$id) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Category not found'
-            ]);
+            return $this->responseError('Category not found');
         }
 
         try {
             $category = Category::where('id', $id)->get();
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $category
-            ]);
+            return $this->responseSuccess('', $category);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ]);
+            return $this->responseError($e->getMessage());
         }
     }
 
@@ -120,29 +97,19 @@ class CategoryController extends Controller
         $validator = Validator::make($data, $rules);
 
         if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $validator->errors()
-            ], 400);
+            return $this->responseError('Category could not be updated. Please try again');
         }
 
         $category = Category::find($id);
 
         if (!$category) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Category not found'
-            ], 404);
+            return $this->responseError('Category not found');
         }
 
         $category->fill($data);
         $category->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Category updated',
-            'data' => $category
-        ]);
+        return $this->responseSuccess('Category updated', $category);
     }
 
     /**
@@ -156,24 +123,15 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (!$category) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Category not found'
-            ]);
+            return $this->responseError('Category not found');
         }
 
         if ($category->products()->count() > 0) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'This category has used on one or more products'
-            ]);
+            return $this->responseError('This category has used on one or more products');
         }
 
         $category->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Category deleted'
-        ]);
+        return $this->responseSuccess('Category deleted');
     }
 }
