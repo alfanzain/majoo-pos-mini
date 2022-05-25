@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Validator;
 
-use App\Models\Product;
+use App\Models\Category;
 
-class ProductController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,17 +19,17 @@ class ProductController extends Controller
     public function get()
     {
         try {
-            $products = Product::query();
+            $categories = Category::query();
 
             $searchQuery = request()->query('q');
 
-            $products->when($searchQuery, function($query) use ($searchQuery) {
+            $categories->when($searchQuery, function($query) use ($searchQuery) {
                 return $query->where("name", "LIKE", "%" . strtolower($searchQuery) . "%");
             });
 
             return response()->json([
                 'status' => 'success',
-                'data' => $products->paginate(10),
+                'data' => $categories->paginate(10),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -48,10 +48,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required|unique:products,name|string',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'category_id' => 'nullable|numeric',
+            'name' => 'required|string',
         ];
 
         $data = $request->all();
@@ -62,16 +59,16 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 'error',
                 // 'message' => $validator->errors()
-                'message' => 'Product could not be created. Please try again'
+                'message' => 'Category could not be created. Please try again'
             ]);
         }
 
-        $product = Product::create($data);
+        $category = Category::create($data);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Product created',
-            'data' => $product
+            'message' => 'Category created',
+            'data' => $category
         ]);
     }
 
@@ -86,16 +83,16 @@ class ProductController extends Controller
         if (!$id) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Product not found'
+                'message' => 'Category not found'
             ]);
         }
 
         try {
-            $product = Product::where('id', $id)->get();
+            $category = Category::where('id', $id)->get();
 
             return response()->json([
                 'status' => 'success',
-                'data' => $product
+                'data' => $category
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -115,10 +112,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'name' => 'required|unique:products,name|string',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'category_id' => 'nullable|numeric',
+            'name' => 'required|string',
         ];
 
         $data = $request->all();
@@ -132,22 +126,22 @@ class ProductController extends Controller
             ], 400);
         }
 
-        $product = Product::find($id);
+        $category = Category::find($id);
 
-        if (!$product) {
+        if (!$category) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Product not found'
+                'message' => 'Category not found'
             ], 404);
         }
 
-        $product->fill($data);
-        $product->save();
+        $category->fill($data);
+        $category->save();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Product updated',
-            'data' => $product
+            'message' => 'Category updated',
+            'data' => $category
         ]);
     }
 
@@ -159,20 +153,20 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::find($id);
+        $category = Category::find($id);
 
-        if (!$product) {
+        if (!$category) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Product not found'
+                'message' => 'Category not found'
             ]);
         }
 
-        $product->delete();
+        $category->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Product deleted'
+            'message' => 'Category deleted'
         ]);
     }
 }

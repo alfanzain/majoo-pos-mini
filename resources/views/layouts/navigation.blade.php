@@ -10,13 +10,16 @@
                 <x-nav-link :href="route('product')" :active="request()->routeIs('product')">
                     <i class="menu-icon fa fa-list"></i>{{ __('Product') }}
                 </x-nav-link>
-                <li class="menu-title">Transaction</li><!-- /.menu-title -->
+                <x-nav-link :href="route('category')" :active="request()->routeIs('category')">
+                    <i class="menu-icon fa fa-list"></i>{{ __('Category') }}
+                </x-nav-link>
+                {{-- <li class="menu-title">Transaction</li><!-- /.menu-title -->
                 <x-nav-link :href="route('product')" :active="request()->routeIs('product')">
                     <i class="menu-icon fa fa-list"></i>{{ __('Selling') }}
                 </x-nav-link>
                 <x-nav-link :href="route('product')" :active="request()->routeIs('product')">
                     <i class="menu-icon fa fa-list"></i>{{ __('Buying') }}
-                </x-nav-link>
+                </x-nav-link> --}}
             </ul>
         </div>
     </nav>
